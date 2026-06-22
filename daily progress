@@ -1,37 +1,37 @@
-# 🏢 Society Management Platform
+# Society Management Platform
 
-## 📅 Day 1 Progress
+## Day 1 Progress
 
-### 🚀 What I did today
+### What I did today
 - Created React app using **Vite (JavaScript)**
 - Installed `react-router-dom` for navigation
 - Installed `axios` for API calls
 
-### ⚛️ Frontend
+### Frontend
 - Created basic folder structure (`pages`, `routes`, `components`)
 - Built **Login page** and **Dashboard page**
 - Set up routing:
-  - `/` → Login
-  - `/dashboard` → Dashboard
+  - "/" → Login
+  - "/dashboard" → Dashboard
 
-### 🟢 Backend
+### Backend
 - Created Express server
-- Built `/api/login` POST endpoint
+- Built "/api/login" POST endpoint
 - Added basic login validation (test credentials)
 - Enabled CORS for frontend communication
 
-### 🔗 Integration
+### Integration
 - Connected React frontend with Express backend using Axios
 - Successfully tested login API response
 
-### 💡 Key Learnings
+### Key Learnings
 - Vite vs CRA difference
 - React Router setup
 - Frontend ↔ Backend communication
 - CORS handling
 - Basic Git workflow (add → commit → push)
 
-### 📌 Status
+### Status
 ✔ Frontend working  
 ✔ Backend working  
 ✔ Login API connected  
