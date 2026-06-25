@@ -1,21 +1,27 @@
+require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
+const connectDB = require("./config/db");
+const residentRoutes = require("./routes/residentRoutes");
 
 const app = express();
 
+
 app.use(cors());
 app.use(express.json());
+app.use("/api/residents", residentRoutes);
 
-app.post("/api/login", (req, res) => {
-    const { email, password } = req.body;
 
-    if (email === "shubham@gmail.com" && password === "1234") {
-        return res.json({ success: true, message: "Login success" });
-    }
+connectDB();
 
-    return res.json({ success: false, message: "Invalid credentials" });
+app.get("/", (req, res) => {
+  res.send("Society Apartment Management API 🚀");
 });
 
-app.listen(5000, () => {
-    console.log("Server running on port 5000");
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT} 🔥`);
 });

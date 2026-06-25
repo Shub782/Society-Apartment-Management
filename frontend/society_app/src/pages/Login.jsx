@@ -48,6 +48,8 @@ export default function Login() {
           />
 
           <button type="submit">Login</button>
+          <p className="login-link">
+            Don't have an account? <a href="/signup">Signup</a> </p>
         </form>
       </div>
     </div>

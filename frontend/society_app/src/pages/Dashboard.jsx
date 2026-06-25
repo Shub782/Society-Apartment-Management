@@ -3,7 +3,9 @@ import StatCard from "../components/statCard";
 import RecentComplaints from "../components/RecentComplaints";
 import "../styles/Dashboard.css";
 
+
 function Dashboard() {
+
   return (
     <div className="dashboard-container">
       <Sidebar />
@@ -21,6 +23,8 @@ function Dashboard() {
           <RecentComplaints />
       </div>
     </div>
+    
+    
   );
 }
 
