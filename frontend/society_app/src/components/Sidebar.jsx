@@ -17,7 +17,7 @@ import {
 function Sidebar() {
   return (
     <div className="sidebar">
-      <h2>Society Apartment Management</h2>
+      <h2>GokulDham Society</h2>
 
       <ul className="sidebar-menu">
 
