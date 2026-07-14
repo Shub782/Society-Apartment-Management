@@ -45,6 +45,9 @@
 
     transition: all .3s ease;
 
+    position: relative;
+    z-index: 100;
+
 }
 
 .top-navbar-title h3 {

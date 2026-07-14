@@ -106,7 +106,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
           <span>Events</span>
         </div>
 
-        <div className="menu-link">
+        <div className="menu-link" onClick={() => navigate("/documents")}>
           <FaFileAlt />
           <span>Documents</span>
         </div>

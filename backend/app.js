@@ -13,6 +13,7 @@ const complaintRoutes = require("./routes/complaintRoutes");
 const eventRoutes = require("./routes/events");
 const noticeRoutes = require("./routes/notices");
 const reportRoutes = require("./routes/reportRoutes");
+const documentRoutes = require("./routes/documentRoutes");
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.use("/api/complaints", complaintRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/notices",noticeRoutes);
 app.use("/api/reports", reportRoutes);
+app.use("/api/documents", documentRoutes);
 
 connectDB();
 
