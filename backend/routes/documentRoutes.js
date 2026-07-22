@@ -4,6 +4,9 @@ const Document = require("../models/Document");
 const upload = require("../middleware/multer");
 const fs = require("fs");
 const path = require("path");
+const { authMiddleware } = require("../middleware/authMiddleware");
+
+router.use(authMiddleware);
 
 // GET all documents
 router.get("/", async (req, res) => {

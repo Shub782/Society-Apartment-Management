@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 
 const Event = require("../models/Event");
+const { authMiddleware } = require("../middleware/authMiddleware");
+
+router.use(authMiddleware);
 
 // GET all events
 router.get("/", async (req, res) => {

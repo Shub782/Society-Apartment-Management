@@ -345,8 +345,38 @@
 }
 @media(max-width:768px){
 
+    .add-complaint-page {
+        padding: 16px 12px;
+    }
+
+    .add-complaint-card {
+        padding: 20px 16px;
+        border-radius: 20px;
+    }
+
+    .title-section {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .title-icon {
+        width: 56px;
+        height: 56px;
+        font-size: 22px;
+        border-radius: 16px;
+    }
+
+    .title-section h2 {
+        font-size: 24px;
+    }
+
     .form-grid{
         grid-template-columns:1fr;
+    }
+
+    .bottom-row {
+        flex-direction: column;
     }
 
     .button-group{
@@ -356,6 +386,7 @@
     .back-btn,
     .save-btn{
         width:100%;
+        text-align: center;
     }
 
     .bottom-row .input-group{

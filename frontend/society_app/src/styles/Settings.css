@@ -1,697 +1,497 @@
-/* =====================================================
-   SETTINGS PAGE
-===================================================== */
+/* ==========================================
+      SETTINGS PAGE - PORTAL THEME
+========================================== */
 
-.settings-container{
-
-    display:flex;
-
-    min-height:100vh;
-
-    background:linear-gradient(
+.settings-page-view {
+    min-height: 100vh;
+    padding: 30px;
+    background: linear-gradient(
         120deg,
         #c9defd 0%,
         #dbeafe 35%,
         #edf6ff 70%,
         #d6e7ff 100%
     );
-
-    position:relative;
-
-    overflow:hidden;
-
+    position: relative;
+    overflow: hidden;
+    font-family: "Outfit", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-/* =====================================================
-   Background Glow
-===================================================== */
-
-.settings-container::before{
-
-    content:"";
-
-    position:absolute;
-
-    width:380px;
-
-    height:380px;
-
-    border-radius:50%;
-
-    background:#3b82f615;
-
-    top:-130px;
-
-    right:-120px;
-
-    filter:blur(35px);
-
+/* Ambient Corner Glowing Orbs */
+.settings-page-view::before {
+    content: "";
+    position: absolute;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    background: rgba(37, 99, 235, 0.16);
+    top: -140px;
+    right: -130px;
+    filter: blur(40px);
+    pointer-events: none;
 }
 
-.settings-container::after{
-
-    content:"";
-
-    position:absolute;
-
-    width:300px;
-
-    height:300px;
-
-    border-radius:50%;
-
-    background:#ef444414;
-
-    bottom:-120px;
-
-    left:-120px;
-
-    filter:blur(35px);
-
+.settings-page-view::after {
+    content: "";
+    position: absolute;
+    width: 360px;
+    height: 360px;
+    border-radius: 50%;
+    background: rgba(34, 197, 94, 0.14);
+    bottom: -130px;
+    left: -130px;
+    filter: blur(40px);
+    pointer-events: none;
 }
 
-/* =====================================================
-   Main Content
-===================================================== */
-
-.settings-content{
-
-    flex:1;
-
-    margin-left:250px;
-
-    padding:40px;
-
-    position:relative;
-
-    z-index:2;
-
+.settings-container-box {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
 }
 
-/* =====================================================
-   Header
-===================================================== */
+/* ==========================================
+            SETTINGS HEADER CARD
+========================================== */
 
-.settings-header{
-
-  margin-bottom:50px;
-
+.settings-header-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 32px 36px;
+    border-radius: 26px;
+    background: rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.40);
+    box-shadow: 
+        0 18px 40px rgba(15, 23, 42, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.40);
+    margin-bottom: 35px;
 }
 
-.settings-tag{
-
-    display:inline-block;
-
-    padding:8px 18px;
-
-    border-radius:999px;
-
-    background:rgba(59,130,246,.12);
-
-    color:#2563eb;
-
-    font-size:13px;
-
-    font-weight:700;
-
-    letter-spacing:1px;
-
-    margin-bottom:18px;
-
+.header-info {
+    max-width: 550px;
 }
 
-.settings-content h2{
-
-    font-size:42px;
-
-    color:#0f172a;
-
-    margin-bottom:12px;
-
-    font-weight:800;
-
+.settings-section-tag {
+    display: inline-block;
+    padding: 8px 18px;
+    border-radius: 999px;
+    background: rgba(59, 130, 246, 0.14);
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
 }
 
-.settings-subtitle{
-
-    color:#64748b;
-
-    font-size:17px;
-
-    line-height:1.7;
-
-    max-width:600px;
-
-    margin-bottom:30px;
-
-}
-/* =====================================================
-   SETTINGS CARDS
-===================================================== */
-
-.settings-card{
-
-    position:relative;
-
-    overflow:hidden;
-
-    background:rgba(255,255,255,.62);
-
-    backdrop-filter:blur(22px);
-    -webkit-backdrop-filter:blur(22px);
-
-    border:1px solid rgba(255,255,255,.38);
-
-    border-radius:28px;
-
-    padding:34px;
-
-    margin-bottom:30px;
-
-    box-shadow:
-        0 20px 45px rgba(15,23,42,.08),
-        inset 0 1px 0 rgba(255,255,255,.35);
-
-    transition:.35s;
-      
-
+.header-info h1 {
+    margin: 0 0 10px 0;
+    font-size: 38px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.5px;
 }
 
-
-.settings-card:hover{
-
-    transform:translateY(-6px);
-
-    box-shadow:
-        0 28px 60px rgba(15,23,42,.12),
-        0 10px 25px rgba(59,130,246,.10);
-
+.header-info p {
+    color: #475569;
+    font-size: 15.5px;
+    line-height: 1.5;
+    margin: 0;
 }
 
-/* Floating Glow */
-
-.settings-card::before{
-
-    content:"";
-
-    position:absolute;
-
-    width:180px;
-
-    height:180px;
-
-    border-radius:50%;
-
-    top:-70px;
-
-    right:-60px;
-
-    background:
-        radial-gradient(circle,
-        rgba(59,130,246,.18),
-        transparent 70%);
-
+.header-badge-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #1e293b;
 }
 
-/* Card Heading */
-
-.settings-card h3{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:12px;
-
-    margin-bottom:28px;
-
-    color:#1e293b;
-
-    font-size:24px;
-
-    font-weight:700;
-
+.shield-chip-icon {
+    color: #2563eb;
+    font-size: 16px;
 }
 
-/* Divider */
+/* ==========================================
+            SETTINGS CARDS & SECTIONS
+========================================== */
 
-.settings-card h3::after{
-
-    content:"";
-
-    flex:1;
-
-    height:2px;
-
-    margin-left:12px;
-
-    background:linear-gradient(
-        to right,
-        rgba(37,99,235,.35),
-        transparent
-    );
-
-}
-/* =====================================================
-   PROFILE SECTION
-===================================================== */
-
-.profile-image{
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:space-between;
-
-    gap:30px;
-
-    margin-bottom:35px;
-
-    flex-wrap:wrap;
-
+.settings-card-box {
+    background: rgba(255, 255, 255, 0.90);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 26px;
+    padding: 34px;
+    margin-bottom: 30px;
+    box-shadow: 
+        0 16px 36px rgba(15, 23, 42, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    border: 1.5px solid rgba(255, 255, 255, 0.85);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
 }
 
-/* Avatar */
-
-.avatar{
-
-    position:relative;
-
-    width:120px;
-
-    height:120px;
-
-    border-radius:50%;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    font-size:42px;
-
-    font-weight:700;
-
-    color:white;
-
-    background:linear-gradient(
-        135deg,
-        #2563eb,
-        #60a5fa
-    );
-
-    box-shadow:
-        0 18px 40px rgba(37,99,235,.30);
-
-    overflow:hidden;
-
-    transition:.35s;
-
+.settings-card-box:hover {
+    box-shadow: 0 24px 48px rgba(15, 23, 42, 0.12);
+    border-color: #ffffff;
 }
 
-.avatar:hover{
-
-    transform:scale(1.05);
-
+.card-box-header {
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f1f5f9;
 }
 
-/* Animated Ring */
-
-.avatar::before{
-
-    content:"";
-
-    position:absolute;
-
-    inset:-8px;
-
-    border-radius:50%;
-
-    border:2px solid rgba(37,99,235,.25);
-
-    animation:avatarPulse 2.8s infinite;
-
+.card-box-header h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-@keyframes avatarPulse{
+.header-card-icon {
+    color: #2563eb;
+    font-size: 20px;
+}
 
-    0%{
-        transform:scale(.95);
-        opacity:1;
+.card-box-header p {
+    color: #64748b;
+    font-size: 14px;
+    margin: 0;
+}
+
+/* ==========================================
+            PROFILE HERO SECTION
+========================================== */
+
+.profile-hero-section {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    margin-bottom: 32px;
+    background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+    padding: 24px;
+    border-radius: 20px;
+    border: 1.5px solid #e2e8f0;
+}
+
+.avatar-wrapper {
+    position: relative;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.profile-preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid #ffffff;
+    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.22);
+}
+
+.avatar-initials {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 44px;
+    font-weight: 700;
+    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.25);
+    border: 4px solid #ffffff;
+}
+
+.camera-overlay-btn {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #2563eb;
+    color: #ffffff;
+    border: 3px solid #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+    transition: all 0.2s ease;
+}
+
+.camera-overlay-btn:hover {
+    background: #1d4ed8;
+    transform: scale(1.1);
+}
+
+.avatar-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.btn-secondary-action {
+    padding: 11px 20px;
+    border-radius: 12px;
+    border: 1.5px solid #cbd5e1;
+    background: #ffffff;
+    color: #334155;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-secondary-action:hover {
+    border-color: #2563eb;
+    color: #2563eb;
+    background: #eff6ff;
+}
+
+.btn-primary-action {
+    padding: 11px 22px;
+    border-radius: 12px;
+    border: none;
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.22);
+    transition: all 0.2s ease;
+}
+
+.btn-primary-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.32);
+}
+
+/* ==========================================
+            FORM GRIDS & INPUTS
+========================================== */
+
+.settings-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.full-span {
+    grid-column: 1 / -1;
+}
+
+.form-input-group {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.form-input-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 8px;
+}
+
+.field-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 52px;
+    border-radius: 14px;
+    background: #ffffff;
+    border: 1.5px solid #cbd5e1;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+    transition: all 0.25s ease;
+}
+
+.textarea-wrapper {
+    height: 110px;
+    align-items: flex-start;
+    padding-top: 14px;
+}
+
+.field-wrapper:hover {
+    border-color: #94a3b8;
+}
+
+.field-wrapper:focus-within {
+    border-color: #2563eb;
+    box-shadow: 
+        0 0 0 4px rgba(37, 99, 235, 0.16),
+        0 4px 12px rgba(37, 99, 235, 0.08);
+}
+
+.input-field-icon {
+    position: absolute;
+    left: 16px;
+    color: #94a3b8;
+    font-size: 17px;
+    pointer-events: none;
+    transition: color 0.2s ease;
+}
+
+.textarea-icon {
+    top: 16px;
+}
+
+.field-wrapper:focus-within .input-field-icon {
+    color: #2563eb;
+}
+
+.field-wrapper input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 0 18px 0 46px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #0f172a;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.field-wrapper textarea {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 0 18px 0 46px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #0f172a;
+    font-family: inherit;
+    resize: none;
+    box-sizing: border-box;
+}
+
+.field-wrapper input::placeholder,
+.field-wrapper textarea::placeholder {
+    color: #94a3b8;
+    font-weight: 400;
+}
+
+/* Action Bars */
+.card-action-bar {
+    margin-top: 24px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.save-changes-btn,
+.update-pwd-btn {
+    height: 50px;
+    padding: 0 28px;
+    border: none;
+    border-radius: 14px;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.25s ease;
+}
+
+.save-changes-btn {
+    background: linear-gradient(135deg, #16a34a, #22c55e);
+    box-shadow: 0 10px 24px rgba(34, 197, 94, 0.28);
+}
+
+.update-pwd-btn {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.28);
+}
+
+.save-changes-btn:hover {
+    background: linear-gradient(135deg, #15803d, #16a34a);
+    transform: translateY(-2px);
+    box-shadow: 0 14px 28px rgba(34, 197, 94, 0.38);
+}
+
+.update-pwd-btn:hover {
+    background: linear-gradient(135deg, #1d4ed8, #1e40af);
+    transform: translateY(-2px);
+    box-shadow: 0 14px 28px rgba(37, 99, 235, 0.38);
+}
+
+/* ==========================================
+            RESPONSIVE
+========================================== */
+
+@media (max-width: 768px) {
+    .settings-page-view {
+        padding: 18px;
     }
 
-    100%{
-        transform:scale(1.15);
-        opacity:0;
+    .settings-header-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 24px 20px;
     }
 
-}
-
-/* Uploaded Image */
-
-.profile-preview{
-
-    width:100%;
-
-    height:100%;
-
-    object-fit:cover;
-
-    border-radius:50%;
-
-}
-
-/* Upload Button */
-
-.profile-image button{
-
-    padding:14px 24px;
-
-    border:none;
-
-    border-radius:14px;
-
-    background:linear-gradient(
-        135deg,
-        #2563eb,
-        #3b82f6
-    );
-
-    color:white;
-
-    font-size:15px;
-
-    font-weight:700;
-
-    cursor:pointer;
-
-    transition:.35s;
-
-    box-shadow:
-        0 14px 30px rgba(37,99,235,.25);
-
-}
-
-.profile-image button:hover{
-
-    transform:translateY(-4px);
-
-    box-shadow:
-        0 20px 38px rgba(37,99,235,.35);
-
-}
-/* =====================================================
-   INPUTS
-===================================================== */
-
-.settings-card input,
-.settings-card textarea{
-
-    width:100%;
-
-    padding:16px 18px;
-
-    margin-bottom:20px;
-
-    border:1px solid rgba(203,213,225,.8);
-
-    border-radius:16px;
-
-    background:rgba(255,255,255,.70);
-
-    backdrop-filter:blur(12px);
-    -webkit-backdrop-filter:blur(12px);
-
-    font-size:15px;
-
-    color:#0f172a;
-
-    transition:.35s;
-
-    outline:none;
-
-    box-sizing:border-box;
-
-}
-
-.settings-card input::placeholder,
-.settings-card textarea::placeholder{
-
-    color:#94a3b8;
-
-}
-
-.settings-card input:focus,
-.settings-card textarea:focus{
-
-    border-color:#2563eb;
-
-    background:white;
-
-    box-shadow:
-        0 0 0 4px rgba(37,99,235,.12),
-        0 12px 28px rgba(37,99,235,.08);
-
-}
-
-.settings-card textarea{
-
-    resize:none;
-
-    min-height:120px;
-
-}
-
-/* =====================================================
-   BUTTONS
-===================================================== */
-
-.save-btn,
-.update-password-btn{
-
-    width:100%;
-
-    padding:16px;
-
-    border:none;
-
-    border-radius:16px;
-
-    color:white;
-
-    font-size:16px;
-
-    font-weight:700;
-
-    cursor:pointer;
-
-    transition:.35s;
-      margin-top:30px;
-
-}
-
-/* Save Button */
-
-.save-btn{
-
-    background:linear-gradient(
-        135deg,
-        #16a34a,
-        #22c55e
-    );
-
-    box-shadow:
-        0 16px 34px rgba(34,197,94,.25);
-
-}
-
-.save-btn:hover{
-
-    transform:translateY(-4px);
-
-    box-shadow:
-        0 22px 42px rgba(34,197,94,.35);
-
-}
-
-/* Password Button */
-
-.update-password-btn{
-
-    margin-top:15px;
-
-    background:linear-gradient(
-        135deg,
-        #2563eb,
-        #3b82f6
-    );
-
-    box-shadow:
-        0 16px 34px rgba(37,99,235,.25);
-
-}
-
-.update-password-btn:hover{
-
-    transform:translateY(-4px);
-
-    box-shadow:
-        0 22px 42px rgba(37,99,235,.35);
-
-}
-/* =====================================================
-   RESPONSIVE
-===================================================== */
-
-@media(max-width:1024px){
-
-    .settings-content{
-
-        margin-left:0;
-
-        padding:30px;
-
+    .header-info h1 {
+        font-size: 30px;
     }
 
-    .settings-card{
-
-        padding:28px;
-
+    .profile-hero-section {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
     }
 
-}
-
-@media(max-width:768px){
-
-    .settings-content{
-
-        padding:18px;
-
+    .avatar-actions {
+        flex-direction: column;
+        width: 100%;
     }
 
-    .settings-content h2{
-
-        font-size:34px;
-
+    .btn-secondary-action,
+    .btn-primary-action {
+        width: 100%;
     }
 
-    .settings-subtitle{
-
-        font-size:15px;
-
+    .settings-form-grid {
+        grid-template-columns: 1fr;
     }
 
-    .settings-card{
-
-        padding:22px;
-
-        border-radius:22px;
-
+    .settings-card-box {
+        padding: 22px 18px;
     }
 
-    .settings-card h3{
-
-        font-size:22px;
-
+    .card-action-bar {
+        justify-content: stretch;
     }
 
-    .profile-image{
-
-        flex-direction:column;
-
-        justify-content:center;
-
-        align-items:center;
-
-        text-align:center;
-
+    .save-changes-btn,
+    .update-pwd-btn {
+        width: 100%;
+        justify-content: center;
     }
-
-    .avatar{
-
-        width:100px;
-
-        height:100px;
-
-        font-size:36px;
-
-    }
-
-    .profile-image button{
-
-        width:100%;
-
-    }
-
-    .save-btn,
-    .update-password-btn{
-
-        width:100%;
-
-    }
-
-}
-
-@media(max-width:480px){
-
-    .settings-content{
-
-        padding:14px;
-
-    }
-
-    .settings-card{
-
-        padding:18px;
-
-    }
-
-    .settings-content h2{
-
-        font-size:30px;
-
-    }
-
-    .settings-tag{
-
-        font-size:12px;
-
-        padding:7px 14px;
-
-    }
-
-    .avatar{
-
-        width:90px;
-
-        height:90px;
-
-        font-size:32px;
-
-    }
-
-}
-
-/* =====================================================
-   SCROLL
-===================================================== */
-
-html{
-
-    scroll-behavior:smooth;
-
-}
-
-/* =====================================================
-   TEXT SELECTION
-===================================================== */
-
-::selection{
-
-    background:#2563eb;
-
-    color:white;
-
 }

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema({
     fullName: {
@@ -23,6 +24,11 @@ const userSchema = new mongoose.Schema({
         unique: true
     },
 
+    occupancyType: {
+        type: String,
+        default: "rent"
+    },
+
     password: {
         type: String,
         required: true
@@ -33,9 +39,30 @@ const userSchema = new mongoose.Schema({
         default: "resident"
     },
     status: {
-    type: String,
-    default: "Pending"
-}
+        type: String,
+        default: "Pending"
+    }
 });
+
+// Pre-save hook to hash password
+userSchema.pre("save", async function (next) {
+    if (!this.isModified("password")) return next();
+    try {
+        const salt = await bcrypt.genSalt(10);
+        this.password = await bcrypt.hash(this.password, salt);
+        next();
+    } catch (err) {
+        next(err);
+    }
+});
+
+// Method to compare passwords (supporting bcrypt check)
+userSchema.methods.comparePassword = async function (candidatePassword) {
+    try {
+        return await bcrypt.compare(candidatePassword, this.password);
+    } catch (err) {
+        return false;
+    }
+};
 
 module.exports = mongoose.model("User", userSchema);

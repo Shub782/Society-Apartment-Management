@@ -1,15 +1,25 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Sidebar from "../components/Sidebar";
-import "../styles/Documents.css"; // We'll reuse some dashboard/documents styling
+import {
+  FaCreditCard,
+  FaCheckCircle,
+  FaClock,
+  FaExchangeAlt,
+  FaSync,
+  FaReceipt
+} from "react-icons/fa";
+import "../styles/Payments.css";
 
 function Payments() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [payments, setPayments] = useState([]);
   const [hasPaid, setHasPaid] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
   const role = localStorage.getItem("role");
-  const userId = localStorage.getItem("userId") || "60d5ec49f1b2c8a1e8000000"; // fallback valid ObjectId
-  const FIXED_MAINTENANCE_AMOUNT = 1500; // Define fixed amount for demonstration
+  const userId = localStorage.getItem("userId") || "60d5ec49f1b2c8a1e8000000";
+  const FIXED_MAINTENANCE_AMOUNT = 1500;
 
   useEffect(() => {
     // Load Razorpay script
@@ -37,25 +47,26 @@ function Payments() {
   };
 
   const fetchPayments = async () => {
+    setLoading(true);
     try {
       const res = await axios.get("http://localhost:5000/api/payments");
       setPayments(res.data);
     } catch (error) {
       console.log("Error fetching payments:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handlePayment = async () => {
     try {
-      // 1. Create order
       const { data: order } = await axios.post("http://localhost:5000/api/payments/create-order", {
         amount: FIXED_MAINTENANCE_AMOUNT,
         userId: userId
       });
 
-      // 2. Open Razorpay Checkout
       const options = {
-        key: "rzp_test_TBEiUI4TC5ky81", // Provided test key
+        key: "rzp_test_TBEiUI4TC5ky81",
         amount: order.amount,
         currency: order.currency,
         name: "Society Maintenance",
@@ -63,7 +74,6 @@ function Payments() {
         order_id: order.id,
         handler: async function (response) {
           try {
-            // 3. Verify payment on success
             const verifyRes = await axios.post("http://localhost:5000/api/payments/verify-payment", {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
@@ -84,12 +94,12 @@ function Payments() {
           }
         },
         prefill: {
-          name: localStorage.getItem("name") || "Resident",
+          name: localStorage.getItem("fullName") || "Resident",
           email: localStorage.getItem("email") || "resident@example.com",
           contact: "9999999999",
         },
         theme: {
-          color: "#007bff",
+          color: "#2563eb",
         },
       };
 
@@ -100,120 +110,163 @@ function Payments() {
       rzp.open();
     } catch (error) {
       console.error("Error initiating payment:", error);
-      alert("Error initiating payment. Check server.");
+      alert("Error initiating payment. Please try again.");
     }
   };
 
-  return (
-    <div className="documents-container dashboard-container">
-      <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+  // Calculate stats
+  const totalAmountCollected = payments.reduce((acc, p) => p.status === "successful" ? acc + p.amount : acc, 0);
+  const totalSuccessfulCount = payments.filter(p => p.status === "successful").length;
 
-      <div className="main-content">
-        <div className="top-navbar">
-          <div className="top-navbar-title-wrapper">
-            <button className="menu-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}>
-              ☰
+  return (
+    <div className="payments-page">
+      <div className="payments-container">
+        {/* Header Section */}
+        <div className="payments-header">
+          <div className="payments-header-left">
+            <span className="section-tag">SOCIETY PAYMENTS</span>
+            <h1>Maintenance Bills</h1>
+            <p>
+              Pay monthly society maintenance fees securely via Razorpay gateway and view real-time transaction history.
+            </p>
+          </div>
+
+          <div className="payments-header-buttons">
+            <button className="dashboard-btn" onClick={() => navigate("/dashboard")}>
+              Dashboard
             </button>
-            <div className="top-navbar-title">
-              <h3>Society Payments</h3>
+            {role === "admin" && (
+              <button className="refresh-btn" onClick={fetchPayments}>
+                <FaSync style={{ marginRight: "8px" }} /> Refresh
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Statistics Row */}
+        <div className="payments-stats-grid">
+          <div className="payment-stat-card">
+            <div className="stat-icon-badge">
+              <FaCreditCard />
+            </div>
+            <div className="stat-info">
+              <h2>₹{FIXED_MAINTENANCE_AMOUNT}</h2>
+              <p>Monthly Maintenance Bill</p>
+            </div>
+          </div>
+
+          <div className="payment-stat-card">
+            <div className="stat-icon-badge" style={{ color: "#16a34a", background: "rgba(34, 197, 94, 0.1)" }}>
+              <FaCheckCircle />
+            </div>
+            <div className="stat-info">
+              <h2>{hasPaid || role === "admin" ? (role === "admin" ? totalSuccessfulCount : "Paid") : "Due"}</h2>
+              <p>{role === "admin" ? "Successful Payments" : "My Payment Status"}</p>
+            </div>
+          </div>
+
+          <div className="payment-stat-card">
+            <div className="stat-icon-badge" style={{ color: "#d97706", background: "rgba(245, 158, 11, 0.1)" }}>
+              <FaExchangeAlt />
+            </div>
+            <div className="stat-info">
+              <h2>{role === "admin" ? `₹${totalAmountCollected}` : "Razorpay"}</h2>
+              <p>{role === "admin" ? "Total Revenue Collected" : "Payment Gateway"}</p>
+            </div>
+          </div>
+
+          <div className="payment-stat-card">
+            <div className="stat-icon-badge" style={{ color: "#9333ea", background: "rgba(147, 51, 234, 0.1)" }}>
+              <FaReceipt />
+            </div>
+            <div className="stat-info">
+              <h2>{role === "admin" ? payments.length : "1st of Month"}</h2>
+              <p>{role === "admin" ? "Total Transactions" : "Bill Cycle"}</p>
             </div>
           </div>
         </div>
 
-        <div className="documents-header dashboard-header">
-          <div className="header-content">
-            <span className="header-tag">PAYMENTS</span>
-            <h2>Maintenance Bills</h2>
-            <p>Pay your monthly society maintenance bills securely.</p>
-          </div>
-        </div>
+        {/* Resident Billing Section */}
+        {role !== "admin" && (
+          <div className="resident-billing-section">
+            <div className="billing-card">
+              <div className="billing-card-header">
+                <h3>Monthly Maintenance Fee</h3>
+                <span className={`billing-badge ${hasPaid ? "paid" : "due"}`}>
+                  {hasPaid ? <><FaCheckCircle /> Paid</> : <><FaClock /> Payment Due</>}
+                </span>
+              </div>
 
-        <div className="payments-content" style={{ padding: "2rem" }}>
-          {role !== "admin" ? (
-            <div className="payment-card" style={{
-              background: "#fff",
-              padding: "2rem",
-              borderRadius: "10px",
-              boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-              maxWidth: "500px"
-            }}>
-              <h3>Monthly Maintenance</h3>
-              <p style={{ margin: "1rem 0", color: "#666" }}>
-                Amount Due: <strong style={{ fontSize: "1.5rem", color: "#333" }}>₹{FIXED_MAINTENANCE_AMOUNT}</strong>
-              </p>
-              
+              <div className="billing-amount-box">
+                <span className="amount-label">Amount Due This Month</span>
+                <div className="amount-value">₹{FIXED_MAINTENANCE_AMOUNT}</div>
+              </div>
+
               {hasPaid ? (
-                <div style={{
-                  background: "#d4edda",
-                  color: "#155724",
-                  padding: "12px 20px",
-                  borderRadius: "8px",
-                  border: "1px solid #c3e6cb",
-                  display: "inline-block",
-                  fontSize: "1rem",
-                  fontWeight: "bold"
-                }}>
-                  ✅ Paid for this month
+                <div className="paid-success-banner">
+                  <FaCheckCircle /> Maintenance Payment Completed for this Month
                 </div>
               ) : (
-                <button 
-                  onClick={handlePayment} 
-                  style={{
-                    background: "#28a745",
-                    color: "white",
-                    border: "none",
-                    padding: "10px 20px",
-                    borderRadius: "5px",
-                    cursor: "pointer",
-                    fontSize: "1rem",
-                    fontWeight: "bold"
-                  }}>
-                  Pay Now with Razorpay
+                <button className="pay-now-btn" onClick={handlePayment}>
+                  <FaCreditCard /> Pay ₹{FIXED_MAINTENANCE_AMOUNT} Now with Razorpay
                 </button>
               )}
             </div>
-          ) : (
-            <div className="admin-payments-list">
-              <h3>Recent Payments</h3>
-              <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "1rem", background: "#fff", borderRadius: "10px", overflow: "hidden", boxShadow: "0 4px 6px rgba(0,0,0,0.1)" }}>
-                <thead style={{ background: "#2563eb", color: "#ffffff", textAlign: "left" }}>
+          </div>
+        )}
+
+        {/* Admin Transactions Data Table / History */}
+        {(role === "admin" || payments.length > 0) && (
+          <div className="table-card-container">
+            <div className="table-header-row">
+              <h3>Recent Payment Transactions</h3>
+            </div>
+
+            <div className="payment-table-wrapper">
+              <table className="payments-table">
+                <thead>
                   <tr>
-                    <th style={{ padding: "12px 15px", borderBottom: "2px solid #1d4ed8" }}>Order ID</th>
-                    <th style={{ padding: "12px 15px", borderBottom: "2px solid #1d4ed8" }}>Amount</th>
-                    <th style={{ padding: "12px 15px", borderBottom: "2px solid #1d4ed8" }}>Status</th>
-                    <th style={{ padding: "12px 15px", borderBottom: "2px solid #1d4ed8" }}>Date</th>
+                    <th>Order ID</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Date</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {payments.length === 0 ? (
+                  {loading ? (
                     <tr>
-                      <td colSpan="4" style={{ padding: "15px", textAlign: "center" }}>No payments found.</td>
+                      <td colSpan="4" style={{ textAlign: "center", padding: "24px" }}>
+                        Loading transaction history...
+                      </td>
+                    </tr>
+                  ) : payments.length === 0 ? (
+                    <tr>
+                      <td colSpan="4" style={{ textAlign: "center", padding: "24px", color: "#64748b" }}>
+                        No transactions recorded yet.
+                      </td>
                     </tr>
                   ) : (
                     payments.map((p) => (
-                      <tr key={p._id} style={{ borderBottom: "1px solid #eee" }}>
-                        <td style={{ padding: "12px 15px" }}>{p.razorpayOrderId}</td>
-                        <td style={{ padding: "12px 15px" }}>₹{p.amount}</td>
-                        <td style={{ padding: "12px 15px" }}>
-                          <span style={{ 
-                            padding: "4px 8px", 
-                            borderRadius: "12px", 
-                            fontSize: "0.85rem",
-                            background: p.status === "successful" ? "#d4edda" : p.status === "failed" ? "#f8d7da" : "#fff3cd",
-                            color: p.status === "successful" ? "#155724" : p.status === "failed" ? "#721c24" : "#856404"
-                          }}>
+                      <tr key={p._id}>
+                        <td>
+                          <span className="order-id-cell">{p.razorpayOrderId}</span>
+                        </td>
+                        <td className="amount-cell">₹{p.amount}</td>
+                        <td>
+                          <span className={`status-pill ${p.status ? p.status.toLowerCase() : "pending"}`}>
+                            {p.status === "successful" ? <FaCheckCircle /> : null}
                             {p.status}
                           </span>
                         </td>
-                        <td style={{ padding: "12px 15px" }}>{new Date(p.createdAt).toLocaleDateString()}</td>
+                        <td>{new Date(p.createdAt).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}</td>
                       </tr>
                     ))
                   )}
                 </tbody>
               </table>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

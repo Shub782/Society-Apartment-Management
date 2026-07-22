@@ -15,32 +15,34 @@ const noticeRoutes = require("./routes/notices");
 const reportRoutes = require("./routes/reportRoutes");
 const documentRoutes = require("./routes/documentRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
+const pollRoutes = require("./routes/pollRoutes");
+const sosRoutes = require("./routes/sosRoutes");
 
 const app = express();
-
 
 app.use(cors());
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use("/api/residents", residentRoutes);
-app.use("/api/visitors",visitorRoutes);
+app.use("/api/visitors", visitorRoutes);
 app.use("/api/users", userRoutes);
-app.use("/api/flats",flatRoutes);
+app.use("/api/flats", flatRoutes);
 app.use("/api/settings", settingsRoutes);
 app.use("/api/complaints", complaintRoutes);
 app.use("/api/events", eventRoutes);
-app.use("/api/notices",noticeRoutes);
+app.use("/api/notices", noticeRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/documents", documentRoutes);
 app.use("/api/payments", paymentRoutes);
+app.use("/api/polls", pollRoutes);
+app.use("/api/sos", sosRoutes);
 
 connectDB();
 
 app.get("/", (req, res) => {
   res.send("Society Apartment Management API 🚀");
 });
-
 
 const PORT = process.env.PORT || 5000;
 

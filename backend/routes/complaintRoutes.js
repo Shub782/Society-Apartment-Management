@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 
 const Complaint = require("../models/Complaint");
+const { authMiddleware } = require("../middleware/authMiddleware");
+
+router.use(authMiddleware);
 
 // Get all complaints
 router.get("/", async (req, res) => {

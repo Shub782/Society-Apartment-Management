@@ -181,3 +181,22 @@ z-index:2;
     transform:translateY(-2px);
 
 }
+
+@media (max-width: 768px) {
+    .form-container {
+        margin: 16px auto;
+        padding: 20px;
+        border-radius: 20px;
+    }
+
+    .form-buttons {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .cancel-btn,
+    .create-btn {
+        width: 100%;
+        text-align: center;
+    }
+}

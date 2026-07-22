@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const Visitor = require("../models/Visitors");
+const { authMiddleware } = require("../middleware/authMiddleware");
+
+router.use(authMiddleware);
 
 router.get("/", async (req, res) => {
   const visitors = await Visitor.find();

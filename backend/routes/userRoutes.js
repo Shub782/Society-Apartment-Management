@@ -1,9 +1,11 @@
 const express = require("express");
 const router = express.Router();
+const jwt = require("jsonwebtoken");
 
 const User = require("../models/User");
 const Flat = require("../models/Flat");
 const Resident = require("../models/Resident");
+const { authMiddleware, isAdmin } = require("../middleware/authMiddleware");
 
 
 // Signup
@@ -15,6 +17,7 @@ router.post("/signup", async (req, res) => {
             email,
             phone,
             flatNo,
+            occupancyType,
             password
         } = req.body;
 
@@ -41,6 +44,7 @@ router.post("/signup", async (req, res) => {
             email,
             phone,
             flatNo,
+            occupancyType: occupancyType || "rent",
             password
         });
 
@@ -68,30 +72,22 @@ router.post("/signup", async (req, res) => {
 
     }
 });
-router.get("/pending", async (req, res) => {
-
+router.get("/pending", authMiddleware, isAdmin, async (req, res) => {
     try {
-
         const users = await User.find({
             status: "Pending"
         });
-
         res.json(users);
-
     } catch (error) {
-
         res.status(500).json({
             message: error.message
         });
-
     }
-
 });
+
 // Approve Resident
-router.put("/approve/:id", async (req, res) => {
-
+router.put("/approve/:id", authMiddleware, isAdmin, async (req, res) => {
     try {
-
         const user = await User.findByIdAndUpdate(
             req.params.id,
             { status: "Approved" },
@@ -110,6 +106,7 @@ router.put("/approve/:id", async (req, res) => {
             flatNo: user.flatNo,
             phone: user.phone,
             email: user.email,
+            occupancyType: user.occupancyType || "rent",
             status: "Active"
         });
         await newResident.save();
@@ -119,21 +116,16 @@ router.put("/approve/:id", async (req, res) => {
             user,
             resident: newResident
         });
-
     } catch (error) {
-
         res.status(500).json({
             message: error.message
         });
-
     }
-
 });
+
 // Reject Resident
-router.put("/reject/:id", async (req, res) => {
-
+router.put("/reject/:id", authMiddleware, isAdmin, async (req, res) => {
     try {
-
         const user = await User.findByIdAndUpdate(
             req.params.id,
             { status: "Rejected" },
@@ -167,11 +159,8 @@ router.put("/reject/:id", async (req, res) => {
 });
 // Login
 router.post("/login", async (req, res) => {
-
     try {
-
         const { email, password } = req.body;
-
         const user = await User.findOne({ email });
 
         if (!user) {
@@ -181,41 +170,47 @@ router.post("/login", async (req, res) => {
             });
         }
 
-        if (user.password !== password) {
+        const isMatch = await user.comparePassword(password);
+        const isPlainTextMatch = user.password === password;
+
+        if (!isMatch && !isPlainTextMatch) {
             return res.status(400).json({
                 success: false,
                 message: "Invalid password"
             });
         }
 
-if (user.status === "Pending") {
-    return res.status(400).json({
-        success: false,
-        message: "Your account is waiting for approval."
-    });
-}
+        if (user.status === "Pending") {
+            return res.status(400).json({
+                success: false,
+                message: "Your account is waiting for approval."
+            });
+        }
 
-if (user.status === "Rejected") {
-    return res.status(400).json({
-        success: false,
-        message: "Your registration request has been rejected by the society administrator. Contact society Secretary"
-    });
-}
+        if (user.status === "Rejected") {
+            return res.status(400).json({
+                success: false,
+                message: "Your registration request has been rejected by the society administrator. Contact society Secretary"
+            });
+        }
+
+        const token = jwt.sign(
+            { userId: user._id, role: user.role },
+            process.env.JWT_SECRET || "super_secret_jwt_key_gokuldham_society_1234",
+            { expiresIn: "7d" }
+        );
 
         res.json({
             success: true,
             message: "Login successful",
+            token,
             user
         });
-
     } catch (error) {
-
         res.status(500).json({
             success: false,
             message: error.message
         });
-
     }
-
 });
 module.exports = router;

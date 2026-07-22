@@ -2,8 +2,13 @@ const express = require("express");
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
 const Payment = require("../models/Payment");
+const User = require("../models/User");
+const Resident = require("../models/Resident");
+const { authMiddleware } = require("../middleware/authMiddleware");
 
 const router = express.Router();
+
+router.use(authMiddleware);
 
 const razorpay = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID || "rzp_test_YourTestKey",
@@ -91,6 +96,112 @@ router.post("/verify-payment", async (req, res) => {
     } catch (error) {
         console.error("Error verifying payment:", error);
         res.status(500).json({ error: "Something went wrong verifying the payment" });
+    }
+});
+
+// Get Payment Stats (Total Revenue, Paid Count, Pending Payments Count)
+router.get("/stats", async (req, res) => {
+    try {
+        const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+        const endOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0, 23, 59, 59, 999);
+
+        // Fetch user residents and resident collection
+        const userResidents = await User.find({ status: { $ne: "Rejected" }, role: { $ne: "admin" } });
+        const residentModels = await Resident.find();
+
+        const seenFlats = new Set();
+        userResidents.forEach(u => u.flatNo && seenFlats.add(u.flatNo));
+        residentModels.forEach(r => r.flatNo && seenFlats.add(r.flatNo));
+
+        const totalResidents = seenFlats.size || 1;
+
+        // Get successful payments this month
+        const successfulPayments = await Payment.find({
+            status: "successful",
+            createdAt: { $gte: startOfMonth, $lte: endOfMonth }
+        });
+
+        const paidUserIds = new Set(successfulPayments.map(p => p.userId ? p.userId.toString() : null));
+        paidUserIds.delete(null);
+
+        const paidCount = paidUserIds.size;
+        const pendingCount = Math.max(0, totalResidents - paidCount);
+
+        const allSuccessful = await Payment.find({ status: "successful" });
+        const totalRevenue = allSuccessful.reduce((sum, p) => sum + (p.amount || 0), 0);
+
+        res.json({
+            totalResidents,
+            paidCount,
+            pendingCount,
+            totalRevenue
+        });
+    } catch (error) {
+        console.error("Error fetching payment stats:", error);
+        res.status(500).json({ error: "Something went wrong fetching payment stats" });
+    }
+});
+
+// Get list of unpaid residents for Admin notifications
+router.get("/unpaid-residents", async (req, res) => {
+    try {
+        const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+        const endOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0, 23, 59, 59, 999);
+
+        // Fetch all residents from Resident collection & User collection
+        const residentDocs = await Resident.find({});
+        const userDocs = await User.find({ role: { $ne: "admin" }, status: { $ne: "Rejected" } });
+
+        // Fetch all successful payments this month
+        const successfulPayments = await Payment.find({
+            status: "successful",
+            createdAt: { $gte: startOfMonth, $lte: endOfMonth }
+        });
+
+        const paidIds = new Set();
+        successfulPayments.forEach(p => {
+            if (p.userId) paidIds.add(p.userId.toString());
+        });
+
+        let unpaidList = [];
+        const seenFlats = new Set();
+
+        // 1. Process Resident collection
+        residentDocs.forEach(r => {
+            const isPaid = paidIds.has(r._id.toString());
+            if (!isPaid && r.flatNo) {
+                seenFlats.add(r.flatNo);
+                unpaidList.push({
+                    _id: r._id,
+                    fullName: r.name || r.fullName || `Resident (${r.flatNo})`,
+                    flatNo: r.flatNo,
+                    email: r.email || "",
+                    phone: r.phone || "",
+                    amount: 1500
+                });
+            }
+        });
+
+        // 2. Process User collection
+        userDocs.forEach(u => {
+            const isPaid = paidIds.has(u._id.toString());
+            if (!isPaid && u.flatNo && !seenFlats.has(u.flatNo)) {
+                seenFlats.add(u.flatNo);
+                unpaidList.push({
+                    _id: u._id,
+                    fullName: u.fullName || `Resident (${u.flatNo})`,
+                    flatNo: u.flatNo,
+                    email: u.email || "",
+                    phone: u.phone || "",
+                    amount: 1500
+                });
+            }
+        });
+
+        res.json(unpaidList);
+    } catch (error) {
+        console.error("Error fetching unpaid residents:", error);
+        res.status(500).json({ error: "Something went wrong fetching unpaid residents" });
     }
 });
 

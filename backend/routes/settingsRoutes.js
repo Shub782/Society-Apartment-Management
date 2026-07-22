@@ -4,6 +4,9 @@ const router = express.Router();
 const Settings = require("../models/Settings");
 const User = require("../models/User");
 const upload = require("../middleware/multer");
+const { authMiddleware } = require("../middleware/authMiddleware");
+
+router.use(authMiddleware);
 
 
 // GET Settings
@@ -104,7 +107,10 @@ router.put("/change-password", async (req, res) => {
             });
         }
 
-        if (user.password !== currentPassword) {
+        const isMatch = await user.comparePassword(currentPassword);
+        const isPlainTextMatch = user.password === currentPassword;
+
+        if (!isMatch && !isPlainTextMatch) {
             return res.status(400).json({
                 message: "Current password is incorrect"
             });

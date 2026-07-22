@@ -6,6 +6,9 @@ const Visitor = require("../models/Visitors");
 const Complaint = require("../models/Complaint");
 const Notice = require("../models/Notice");
 const Event = require("../models/Event");
+const { authMiddleware } = require("../middleware/authMiddleware");
+
+router.use(authMiddleware);
 
 router.get("/", async (req, res) => {
     try {

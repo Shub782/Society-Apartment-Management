@@ -23,38 +23,41 @@ import Reports from "../pages/Reports";
 import Documents from "../pages/Documents";
 import AddDocument from "../pages/AddDocument";
 import Payments from "../pages/Payments";
+import Polls from "../pages/Polls";
 
 export default function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Public Auth Routes */}
         <Route path="/" element={<Login />} />
-        <Route element={<MainLayout />}></Route>
         <Route path="/signup" element={<Signup />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/residents" element={<Residents />} />
-        <Route path="/add-resident" element={<AddResident />} />
-        <Route path="/edit-resident/:id" element={<EditResident />} />
-        <Route path="/visitors" element={<Visitors />} />
-        <Route path="/addvisitor" element={<AddVisitors />} />
-        <Route path="/pending-residents" element={<PendingResidents />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/complaints" element={<Complaints />} />
-        <Route path="/add-complaint" element={<AddComplaint />} />
-        <Route path="/events" element={<Events />} />
         <Route path="/terms" element={<Terms />} />
-        <Route path="/add-event" element={<AddEvent />} />
-        <Route path="/notices" element={<Notices />} />
-        <Route path="/add-notice" element={<AddNotice />} />
-        <Route path="/edit-notice/:id" element={<EditNotice />} />
-        <Route path="/reports" element={<Reports />} />
-        <Route path="/documents" element={<Documents />} />
-        <Route path="/add-document" element={<AddDocument />} />
-        <Route path="/payments" element={<Payments />} />
-        <Route
-          path="/edit-event/:id"
-          element={<EditEvent />}
-        />
+
+        {/* Portal App Routes with Persistent YouTube-Style Menu & Drawer */}
+        <Route element={<MainLayout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/residents" element={<Residents />} />
+          <Route path="/add-resident" element={<AddResident />} />
+          <Route path="/edit-resident/:id" element={<EditResident />} />
+          <Route path="/visitors" element={<Visitors />} />
+          <Route path="/addvisitor" element={<AddVisitors />} />
+          <Route path="/pending-residents" element={<PendingResidents />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/polls" element={<Polls />} />
+          <Route path="/complaints" element={<Complaints />} />
+          <Route path="/add-complaint" element={<AddComplaint />} />
+          <Route path="/events" element={<Events />} />
+          <Route path="/add-event" element={<AddEvent />} />
+          <Route path="/edit-event/:id" element={<EditEvent />} />
+          <Route path="/notices" element={<Notices />} />
+          <Route path="/add-notice" element={<AddNotice />} />
+          <Route path="/edit-notice/:id" element={<EditNotice />} />
+          <Route path="/reports" element={<Reports />} />
+          <Route path="/documents" element={<Documents />} />
+          <Route path="/add-document" element={<AddDocument />} />
+          <Route path="/payments" element={<Payments />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
