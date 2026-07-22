@@ -72,9 +72,9 @@ const MainLayout = () => {
 
   const fetchProfileImage = async () => {
     try {
-      const res = await axios.get("https://society-apartment-management.onrender.com/api/settings");
+      const res = await axios.get("http://localhost:5000/api/settings");
       if (res.data.profileImage) {
-        setProfileImage(`https://society-apartment-management.onrender.com/uploads/${res.data.profileImage}`);
+        setProfileImage(`http://localhost:5000/uploads/${res.data.profileImage}`);
       }
     } catch (error) {
       console.log(error);
@@ -85,7 +85,7 @@ const MainLayout = () => {
     try {
       const token = localStorage.getItem("token");
       const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
-      const res = await axios.get("https://society-apartment-management.onrender.com/api/sos/active", config);
+      const res = await axios.get("http://localhost:5000/api/sos/active", config);
       setActiveSOSAlerts(res.data || []);
     } catch (error) {
       console.log(error);
@@ -106,7 +106,7 @@ const MainLayout = () => {
         message: sosMessage
       };
 
-      await axios.post("https://society-apartment-management.onrender.com/api/sos/trigger", payload, config);
+      await axios.post("http://localhost:5000/api/sos/trigger", payload, config);
       alert(`EMERGENCY SOS ALERT SENT! Security and Secretary have been notified.`);
       setShowSOSModal(false);
       setSosMessage("");
@@ -124,7 +124,7 @@ const MainLayout = () => {
     try {
       const token = localStorage.getItem("token");
       const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
-      await axios.put(`https://society-apartment-management.onrender.com/api/sos/${sosId}/resolve`, {}, config);
+      await axios.put(`http://localhost:5000/api/sos/${sosId}/resolve`, {}, config);
       alert("Emergency alert resolved!");
       fetchActiveSOSAlerts();
     } catch (error) {
@@ -139,7 +139,7 @@ const MainLayout = () => {
 
     // 1. Fetch pending resident registrations
     try {
-      const res = await axios.get("https://society-apartment-management.onrender.com/api/users/pending", config);
+      const res = await axios.get("http://localhost:5000/api/users/pending", config);
       const sanitized = (res.data || []).map(u => ({
         ...u,
         flatNo: u.flatNo || "",
@@ -154,7 +154,7 @@ const MainLayout = () => {
 
     // 2. Fetch unpaid residents for current month
     try {
-      const res = await axios.get("https://society-apartment-management.onrender.com/api/payments/unpaid-residents", config);
+      const res = await axios.get("http://localhost:5000/api/payments/unpaid-residents", config);
       setUnpaidResidents(res.data || []);
     } catch (error) {
       console.log(error);
@@ -162,7 +162,7 @@ const MainLayout = () => {
 
     // 3. Fetch open complaints
     try {
-      const res = await axios.get("https://society-apartment-management.onrender.com/api/complaints");
+      const res = await axios.get("http://localhost:5000/api/complaints");
       const openOnly = (res.data || []).filter(c => c.status !== "Resolved");
       setOpenComplaints(openOnly);
     } catch (error) {
@@ -179,7 +179,7 @@ const MainLayout = () => {
     // 1. Payment Due Check
     try {
       if (userId) {
-        const payRes = await axios.get(`https://society-apartment-management.onrender.com/api/payments/status/${userId}`, config);
+        const payRes = await axios.get(`http://localhost:5000/api/payments/status/${userId}`, config);
         if (!payRes.data.hasPaid) {
           list.push({
             id: "pay_due",
@@ -198,7 +198,7 @@ const MainLayout = () => {
 
     // 2. Latest Event Check
     try {
-      const eventRes = await axios.get("https://society-apartment-management.onrender.com/api/events");
+      const eventRes = await axios.get("http://localhost:5000/api/events");
       if (eventRes.data && eventRes.data.length > 0) {
         list.push({
           id: "event_new",
@@ -216,7 +216,7 @@ const MainLayout = () => {
 
     // 3. Latest Notice Check
     try {
-      const noticeRes = await axios.get("https://society-apartment-management.onrender.com/api/notices");
+      const noticeRes = await axios.get("http://localhost:5000/api/notices");
       if (noticeRes.data && noticeRes.data.length > 0) {
         list.push({
           id: "notice_new",
@@ -234,7 +234,7 @@ const MainLayout = () => {
 
     // 4. New Resident Joined Check
     try {
-      const resList = await axios.get("https://society-apartment-management.onrender.com/api/residents", config);
+      const resList = await axios.get("http://localhost:5000/api/residents", config);
       if (resList.data && resList.data.length > 0) {
         const latest = resList.data[resList.data.length - 1];
         list.push({
@@ -253,7 +253,7 @@ const MainLayout = () => {
 
     // 5. Complaints Update Check
     try {
-      const compRes = await axios.get("https://society-apartment-management.onrender.com/api/complaints");
+      const compRes = await axios.get("http://localhost:5000/api/complaints");
       if (compRes.data && compRes.data.length > 0) {
         list.push({
           id: "comp_new",
@@ -276,7 +276,7 @@ const MainLayout = () => {
     if (!window.confirm("Approve this resident?")) return;
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.put(`https://society-apartment-management.onrender.com/api/users/approve/${id}`, {}, {
+      const res = await axios.put(`http://localhost:5000/api/users/approve/${id}`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       alert(res.data.message);
@@ -291,7 +291,7 @@ const MainLayout = () => {
     if (!window.confirm("Reject this resident?")) return;
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.put(`https://society-apartment-management.onrender.com/api/users/reject/${id}`, {}, {
+      const res = await axios.put(`http://localhost:5000/api/users/reject/${id}`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       alert(res.data.message);
